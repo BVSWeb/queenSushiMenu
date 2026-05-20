@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sushi Queen — Gestione Menù</title>
+<title>Sushi Queen — 菜单管理</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0a;color:#f0ede8;font-family:'Helvetica Neue',Arial,sans-serif;min-height:100vh}
@@ -73,49 +73,49 @@ body{background:#0a0a0a;color:#f0ede8;font-family:'Helvetica Neue',Arial,sans-se
 
 <div id="login-screen">
   <h1>Sushi Queen</h1>
-  <p>Gestione Menù</p>
+  <p>菜单管理</p>
   <input id="pin-input" type="password" maxlength="20" placeholder="••••">
   <div id="pin-err"></div>
-  <button class="login-btn" id="login-btn">Accedi</button>
+  <button class="login-btn" id="login-btn">登录</button>
 </div>
 
 <div id="main">
   <div class="top-bar">
-    <h1>🍣 Gestione Menù <span class="sync-badge" id="sync-badge"></span></h1>
+    <h1>🍣 菜单管理 <span class="sync-badge" id="sync-badge"></span></h1>
     <div class="top-bar-right">
-      <button class="seed-btn" id="seed-btn">⬇️ Carica piatti</button>
-      <button class="add-btn" id="add-btn">+ Nuovo piatto</button>
-      <button class="logout-btn" id="logout-btn">Esci</button>
+      <button class="seed-btn" id="seed-btn">⬇️ 加载菜品</button>
+      <button class="add-btn" id="add-btn">+ 新增菜品</button>
+      <button class="logout-btn" id="logout-btn">退出</button>
     </div>
   </div>
   <div class="cat-tabs" id="cat-tabs"></div>
-  <div class="items-wrap" id="items-wrap"><div class="empty-msg">Caricamento...</div></div>
+  <div class="items-wrap" id="items-wrap"><div class="empty-msg">加载中...</div></div>
 </div>
 
 <div id="modal-overlay">
   <div id="modal">
-    <div class="modal-title" id="modal-title">Nuovo piatto</div>
+    <div class="modal-title" id="modal-title">新增菜品</div>
     <div class="frow">
-      <div class="fgroup"><label class="flabel">Numero (es. 42)</label><input class="finput" id="f-n" type="text"></div>
-      <div class="fgroup"><label class="flabel">Prezzo (€)</label><input class="finput" id="f-price" type="number" step="0.50" min="0"></div>
+      <div class="fgroup"><label class="flabel">编号 (如 42)</label><input class="finput" id="f-n" type="text"></div>
+      <div class="fgroup"><label class="flabel">价格 (€)</label><input class="finput" id="f-price" type="number" step="0.50" min="0"></div>
     </div>
-    <div class="fgroup"><label class="flabel">Nome piatto</label><input class="finput" id="f-name" type="text"></div>
-    <div class="fgroup"><label class="flabel">Descrizione / Ingredienti</label><textarea class="ftextarea" id="f-desc"></textarea></div>
+    <div class="fgroup"><label class="flabel">菜品名称</label><input class="finput" id="f-name" type="text"></div>
+    <div class="fgroup"><label class="flabel">描述 / 食材</label><textarea class="ftextarea" id="f-desc"></textarea></div>
     <div class="frow">
-      <div class="fgroup"><label class="flabel">Categoria</label><select class="fselect" id="f-cat"></select></div>
-      <div class="fgroup"><label class="flabel">Disponibilità</label>
+      <div class="fgroup"><label class="flabel">分类</label><select class="fselect" id="f-cat"></select></div>
+      <div class="fgroup"><label class="flabel">供应时段</label>
         <select class="fselect" id="f-cena">
-          <option value="0">Pranzo e Cena</option>
-          <option value="1">Solo Cena</option>
+          <option value="0">午餐和晚餐</option>
+          <option value="1">仅晚餐</option>
         </select>
       </div>
     </div>
-    <div class="fgroup"><label class="flabel">Surgelato *</label>
+    <div class="fgroup"><label class="flabel">冷冻品 *</label>
       <select class="fselect" id="f-frozen"><option value="0">No</option><option value="1">Sì *</option></select>
     </div>
     <div class="modal-btns">
-      <button class="modal-cancel" id="modal-cancel">Annulla</button>
-      <button class="modal-save" id="modal-save">Salva</button>
+      <button class="modal-cancel" id="modal-cancel">取消</button>
+      <button class="modal-save" id="modal-save">保存</button>
     </div>
   </div>
 </div>
@@ -142,35 +142,35 @@ const auth = getAuth(fb);
 const ADMIN_EMAIL = "admin@sushiqueen.it"; // cambia con la tua email Firebase Auth
 
 const CATS = [
-  {id:"antipasti",  label:"Antipasti e Tempura",  icon:"🥢"},
-  {id:"tempura",    label:"Tempura e Insalata",    icon:"🥗"},
-  {id:"zuppe",      label:"Zuppe",                 icon:"🍜"},
-  {id:"primi",      label:"Riso e Pasta",          icon:"🍚"},
-  {id:"ramen",      label:"Ramen",                 icon:"🍝"},
-  {id:"teppanyaki", label:"Teppanyaki",            icon:"🔥"},
-  {id:"pollo",      label:"Pollo",                 icon:"🍗"},
-  {id:"gamberi",    label:"Gamberi",               icon:"🦐"},
-  {id:"manzo",      label:"Manzo",                 icon:"🥩"},
-  {id:"anatra",     label:"Anatra",                icon:"🦆"},
-  {id:"maiale",     label:"Maiale",                icon:"🐷"},
-  {id:"verdure",    label:"Verdure",               icon:"🥦"},
-  {id:"casseruola", label:"Casseruola",            icon:"🫕"},
-  {id:"nigiri",     label:"Nigiri",                icon:"🍣"},
-  {id:"gunkan",     label:"Gunkan",                icon:"🌊"},
-  {id:"temaki",     label:"Temaki",                icon:"🌮"},
-  {id:"hosomaki",   label:"Hosomaki",              icon:"🌀"},
-  {id:"uramaki",    label:"Uramaki",               icon:"🎯"},
-  {id:"futomaki",   label:"Futo Maki",             icon:"🎌"},
-  {id:"sushi-misto",label:"Sushi Misto",           icon:"🍱"},
-  {id:"sashimi",    label:"Sashimi",               icon:"🐟"},
-  {id:"tartare",    label:"Tartare",               icon:"🫙"},
-  {id:"tataki",     label:"Tataki",                icon:"🌡️"},
-  {id:"carpaccio",  label:"Carpaccio",             icon:"🍽️"},
-  {id:"chirashi",   label:"Chirashi",              icon:"🎋"},
-  {id:"sandwich",   label:"Sandwich",              icon:"🥪"},
-  {id:"onigiri",    label:"Onigiri",               icon:"🍙"},
-  {id:"speciale",   label:"Speciale",              icon:"⭐"},
-  {id:"speciali",   label:"Speciali",              icon:"✨"},
+  {id:"antipasti",  label:"前菜天妇罗",  icon:"🥢"},
+  {id:"tempura",    label:"天妇罗沙拉",    icon:"🥗"},
+  {id:"zuppe",      label:"汤类",                 icon:"🍜"},
+  {id:"primi",      label:"米饭/面食",          icon:"🍚"},
+  {id:"ramen",      label:"拉面",                 icon:"🍝"},
+  {id:"teppanyaki", label:"铁板烧",            icon:"🔥"},
+  {id:"pollo",      label:"鸡肉",                 icon:"🍗"},
+  {id:"gamberi",    label:"虾类",               icon:"🦐"},
+  {id:"manzo",      label:"牛肉",                 icon:"🥩"},
+  {id:"anatra",     label:"鸭肉",                icon:"🦆"},
+  {id:"maiale",     label:"猪肉",                icon:"🐷"},
+  {id:"verdure",    label:"蔬菜",               icon:"🥦"},
+  {id:"casseruola", label:"砂锅",            icon:"🫕"},
+  {id:"nigiri",     label:"握寿司",                icon:"🍣"},
+  {id:"gunkan",     label:"军舰卷",                icon:"🌊"},
+  {id:"temaki",     label:"手卷",                icon:"🌮"},
+  {id:"hosomaki",   label:"细卷",              icon:"🌀"},
+  {id:"uramaki",    label:"反卷",               icon:"🎯"},
+  {id:"futomaki",   label:"粗卷",             icon:"🎌"},
+  {id:"sushi-misto",label:"综合寿司",           icon:"🍱"},
+  {id:"sashimi",    label:"刺身",               icon:"🐟"},
+  {id:"tartare",    label:"鞑靼",               icon:"🫙"},
+  {id:"tataki",     label:"炙烤",                icon:"🌡️"},
+  {id:"carpaccio",  label:"薄片生鱼",             icon:"🍽️"},
+  {id:"chirashi",   label:"散寿司",              icon:"🎋"},
+  {id:"sandwich",   label:"三明治",              icon:"🥪"},
+  {id:"onigiri",    label:"饭团",               icon:"🍙"},
+  {id:"speciale",   label:"特别推荐",              icon:"⭐"},
+  {id:"speciali",   label:"特色菜",              icon:"✨"},
 ];
 
 let allItems=[],curCat="antipasti",editId=null,unsub=null;
@@ -192,14 +192,14 @@ onAuthStateChanged(auth, user => {
 document.getElementById("pin-input").addEventListener("input",()=>{ document.getElementById("pin-err").textContent=""; });
 async function handleLogin(){
   const pw=document.getElementById("pin-input").value.trim();
-  if(!pw){document.getElementById("pin-err").textContent="Inserisci la password";return;}
+  if(!pw){document.getElementById("pin-err").textContent="请输入密码";return;}
   try{
-    document.getElementById("login-btn").textContent="Accesso...";
+    document.getElementById("login-btn").textContent="登录中...";
     await signInWithEmailAndPassword(auth,ADMIN_EMAIL,pw);
   }catch(e){
-    document.getElementById("pin-err").textContent="Password errata";
+    document.getElementById("pin-err").textContent="密码错误";
     document.getElementById("pin-input").value="";
-    document.getElementById("login-btn").textContent="Accedi";
+    document.getElementById("login-btn").textContent="登录";
   }
 }
 document.getElementById("login-btn").addEventListener("click",handleLogin);
@@ -220,16 +220,16 @@ function buildCatTabs(){
 
 function startSync(){
   if(unsub) unsub();
-  setSyncBadge("⏳ sync..."); 
+  setSyncBadge("⏳ 同步中..."); 
   unsub=onSnapshot(collection(db,"menu"),snap=>{
     allItems=snap.docs.map(d=>({docId:d.id,...d.data()}));
     allItems.sort((a,b)=>{
       const ci=CATS.findIndex(c=>c.id===a.catId)-CATS.findIndex(c=>c.id===b.catId);
       return ci!==0?ci:String(a.n).localeCompare(String(b.n),undefined,{numeric:true});
     });
-    setSyncBadge("● live");
+    setSyncBadge("● 实时");
     renderItems();
-  },err=>setSyncBadge("✗ offline",true));
+  },err=>setSyncBadge("✗ 离线",true));
 }
 
 function setSyncBadge(t,e){
@@ -240,20 +240,20 @@ function setSyncBadge(t,e){
 function renderItems(){
   const wrap=document.getElementById("items-wrap");
   const filtered=allItems.filter(i=>i.catId===curCat);
-  if(!filtered.length){wrap.innerHTML='<div class="empty-msg">Nessun piatto in questa categoria.<br>Clicca "+ Nuovo piatto" per aggiungerne uno.</div>';return;}
+  if(!filtered.length){wrap.innerHTML='<div class="empty-msg">Nessun piatto in questa categoria.<br>Clicca "+ 新增菜品" per aggiungerne uno.</div>';return;}
   wrap.innerHTML=filtered.map(it=>`
     <div class="item-row${it.sospeso?" sospeso":""}">
       <div class="item-head">
         <span class="item-num">${it.n}</span>
-        <span class="item-name">${it.name}${it.sospeso?'<span class="badge-sospeso">SOSPESO</span>':''}${it.cena?'<span class="badge-cena">🌙 Solo Cena</span>':''}</span>
+        <span class="item-name">${it.name}${it.sospeso?'<span class="badge-sospeso">已暂停</span>':''}${it.cena?'<span class="badge-cena">🌙 仅晚餐</span>':''}</span>
         ${it.f?'<span style="color:#6ab0f5;font-size:12px">*</span>':''}
         <span class="item-price">€ ${Number(it.price).toFixed(2).replace(".",",")}</span>
       </div>
       ${it.desc?`<div class="item-desc">${it.desc}</div>`:''}
       <div class="item-actions">
-        <button class="act-btn act-edit" data-action="edit" data-doc="${it.docId}">✏️ Modifica</button>
-        <button class="act-btn act-suspend" data-action="suspend" data-doc="${it.docId}">${it.sospeso?"▶️ Riattiva":"⏸ Sospendi"}</button>
-        <button class="act-btn act-delete" data-action="delete" data-doc="${it.docId}">🗑 Elimina</button>
+        <button class="act-btn act-edit" data-action="edit" data-doc="${it.docId}">✏️ 修改</button>
+        <button class="act-btn act-suspend" data-action="suspend" data-doc="${it.docId}">${it.sospeso?"▶️ 恢复":"⏸ 暂停"}</button>
+        <button class="act-btn act-delete" data-action="delete" data-doc="${it.docId}">🗑 删除</button>
       </div>
     </div>`).join("");
   wrap.querySelectorAll("[data-action]").forEach(btn=>{
@@ -267,12 +267,12 @@ function renderItems(){
 }
 
 async function toggleSuspend(item){
-  try{ await updateDoc(doc(db,"menu",item.docId),{sospeso:!item.sospeso}); showToast(item.sospeso?"Riattivato":"Sospeso"); }
-  catch(e){ alert("Errore: "+e.message); }
+  try{ await updateDoc(doc(db,"menu",item.docId),{sospeso:!item.sospeso}); showToast(item.sospeso?"已恢复":"已暂停"); }
+  catch(e){ alert("错误："+e.message); }
 }
 function confirmDelete(item){
-  if(!confirm('Eliminare "'+item.name+'"?')) return;
-  deleteDoc(doc(db,"menu",item.docId)).then(()=>showToast("Eliminato")).catch(e=>alert("Errore: "+e.message));
+  if(!confirm('确定删除 "'+item.name+'" 吗？')) return;
+  deleteDoc(doc(db,"menu",item.docId)).then(()=>showToast("已删除")).catch(e=>alert("错误："+e.message));
 }
 
 function populateCatSelect(){
@@ -280,8 +280,8 @@ function populateCatSelect(){
 }
 document.getElementById("add-btn").addEventListener("click",()=>openModal(null));
 document.getElementById("seed-btn").addEventListener("click",async()=>{
-  if(!confirm("Caricare tutti i piatti di default su Firebase?")) return;
-  setSyncBadge("⏳ caricamento...");
+  if(!confirm("将所有默认菜品加载到 Firebase？")) return;
+  setSyncBadge("⏳ 加载中...");
   await seedIfEmpty(true);
 });
 document.getElementById("modal-cancel").addEventListener("click",closeModal);
@@ -291,7 +291,7 @@ document.getElementById("modal-save").addEventListener("click",saveItem);
 function openModal(item){
   populateCatSelect();
   editId=item?item.docId:null;
-  document.getElementById("modal-title").textContent=item?"Modifica piatto":"Nuovo piatto";
+  document.getElementById("modal-title").textContent=item?"修改菜品":"新增菜品";
   document.getElementById("f-n").value=item?item.n:"";
   document.getElementById("f-name").value=item?item.name:"";
   document.getElementById("f-desc").value=item?(item.desc||""):"";
@@ -311,17 +311,17 @@ async function saveItem(){
   const cena=document.getElementById("f-cena").value==="1"?1:0;
   const f=document.getElementById("f-frozen").value==="1"?1:0;
   const catId=document.getElementById("f-cat").value;
-  if(!n||!name||isNaN(price)){alert("Numero, nome e prezzo sono obbligatori.");return;}
+  if(!n||!name||isNaN(price)){alert("编号、名称和价格为必填项。");return;}
   const data={n,name,price,desc,f,cena,catId,sospeso:false,ps:"€ "+price.toFixed(2).replace(".",",")};
   try{
     if(editId){
       const ex=allItems.find(i=>i.docId===editId); data.sospeso=ex?ex.sospeso:false;
-      await updateDoc(doc(db,"menu",editId),data); showToast("Aggiornato ✅");
+      await updateDoc(doc(db,"menu",editId),data); showToast("已更新 ✅");
     } else {
-      await setDoc(doc(db,"menu",catId+"_"+String(n).replace(/[^a-z0-9]/gi,"_")),data); showToast("Aggiunto ✅");
+      await setDoc(doc(db,"menu",catId+"_"+String(n).replace(/[^a-z0-9]/gi,"_")),data); showToast("已添加 ✅");
     }
     closeModal();
-  }catch(e){ alert("Errore: "+e.message); }
+  }catch(e){ alert("错误："+e.message); }
 }
 
 function showToast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2000); }
@@ -329,9 +329,9 @@ function showToast(msg){ const t=document.getElementById("toast"); t.textContent
 async function seedIfEmpty(force){
   const snap=await getDocs(collection(db,"menu"));
   if(!snap.empty&&!force) return;
-  setSyncBadge("⏳ caricamento dati...");
+  setSyncBadge("⏳ 加载数据...");
   const SEED_MENU=[
-  {id:"antipasti",label:"Antipasti e Tempura",icon:"🥢",items:[
+  {id:"antipasti",label:"前菜天妇罗",icon:"🥢",items:[
     {n:"01",name:"Harumaki 2pz",desc:"Involtini di verdure",price:2.5,ps:"€ 2,50",f:0,cena:0},
     {n:"02",name:"Harumaki Ebi 2pz",desc:"Involtini di gamberi* e verdure",price:3.0,ps:"€ 3,00",f:1,cena:0},
     {n:"03",name:"Edamame",desc:"Baccelli di soia*",price:3.0,ps:"€ 3,00",f:1,cena:0},
@@ -351,7 +351,7 @@ async function seedIfEmpty(force){
     {n:"14",name:"Bocconcini di Ebi 2pz",desc:"Bocconcini di patate con gamberi*",price:4.5,ps:"€ 4,50",f:1,cena:1},
     {n:"15",name:"Tako Yaki 2pz",desc:"Polpo* e verdure miste",price:4.0,ps:"€ 4,00",f:1,cena:1},
   ]},
-  {id:"tempura",label:"Tempura e Insalata",icon:"🥗",items:[
+  {id:"tempura",label:"天妇罗沙拉",icon:"🥗",items:[
     {n:"19",name:"Tempura Ika",desc:"Calamaro* fritto",price:6.0,ps:"€ 6,00",f:1,cena:0},
     {n:"21",name:"Goma Wakame",desc:"Insalata di alghe e sesamo",price:3.0,ps:"€ 3,00",f:0,cena:0},
     {n:"22",name:"Insalata di Salmone",desc:"Insalata salmone* salsa e sesamo",price:6.0,ps:"€ 6,00",f:1,cena:0},
@@ -359,12 +359,12 @@ async function seedIfEmpty(force){
     {n:"24",name:"Insalata Mista",desc:"",price:3.0,ps:"€ 3,00",f:0,cena:0},
     {n:"20",name:"Tacos di Ebi",desc:"Salmone* piccante formaggio",price:5.0,ps:"€ 5,00",f:1,cena:1},
   ]},
-  {id:"zuppe",label:"Zuppe",icon:"🍜",items:[
+  {id:"zuppe",label:"汤类",icon:"🍜",items:[
     {n:"25",name:"Zuppa di Miso",desc:"Zuppa di soia con alghe e toufu",price:3.0,ps:"€ 3,00",f:0,cena:0},
     {n:"26",name:"Zuppa di Pollo e Mais",desc:"Pollo mais dolce uova",price:3.0,ps:"€ 3,00",f:0,cena:0},
     {n:"27",name:"Zuppa Agro Piccante",desc:"Funghi bambù toufu uova",price:3.0,ps:"€ 3,00",f:0,cena:0},
   ]},
-  {id:"primi",label:"Riso e Pasta",icon:"🍚",items:[
+  {id:"primi",label:"米饭/面食",icon:"🍚",items:[
     {n:"28",name:"Gnocchi di Riso e Yasai",desc:"Verdure miste",price:4.5,ps:"€ 4,50",f:0,cena:0},
     {n:"29",name:"Gnocchi di Riso con Mare",desc:"Verdure miste e frutti di mare*",price:5.5,ps:"€ 5,50",f:1,cena:0},
     {n:"30",name:"Riso alla Cantonese",desc:"Prosciutto piselli uova",price:4.5,ps:"€ 4,50",f:0,cena:0},
@@ -382,11 +382,11 @@ async function seedIfEmpty(force){
     {n:"42",name:"Yasai Soba",desc:"Spaghetti di grano saraceno con verdure miste",price:5.0,ps:"€ 5,00",f:0,cena:0},
     {n:"43",name:"Yaki Soba",desc:"Spaghetti di grano saraceno con verdure miste frutti di mare*",price:5.5,ps:"€ 5,50",f:1,cena:0},
   ]},
-  {id:"ramen",label:"Ramen",icon:"🍝",items:[
+  {id:"ramen",label:"拉面",icon:"🍝",items:[
     {n:"44",name:"Ramen in Brodo con Frutti di Mare",desc:"Spaghetti con frutti di mare* uova verdure",price:6.5,ps:"€ 6,50",f:1,cena:0},
     {n:"45",name:"Ramen in Brodo con Manzo",desc:"Spaghetti con manzo uova verdure",price:6.5,ps:"€ 6,50",f:0,cena:0},
   ]},
-  {id:"teppanyaki",label:"Teppanyaki",icon:"🔥",items:[
+  {id:"teppanyaki",label:"铁板烧",icon:"🔥",items:[
     {n:"46",name:"Salmone alla Griglia",desc:"Salmone* sesame salsa teriyaki",price:9.0,ps:"€ 9,00",f:1,cena:0},
     {n:"48",name:"Pesce Bianco alla Griglia",desc:"Branzino* sesame salsa teriyaki",price:5.0,ps:"€ 5,00",f:1,cena:0},
     {n:"49",name:"Yaki Ebi 2pz",desc:"Spiedini di gamberetti* griglia sesame",price:4.5,ps:"€ 4,50",f:1,cena:0},
@@ -396,14 +396,14 @@ async function seedIfEmpty(force){
     {n:"53",name:"Cotoletta di Maiale Fritto",desc:"",price:5.5,ps:"€ 5,50",f:0,cena:0},
     {n:"47",name:"Tonno alla Griglia",desc:"Tonno* sesame salsa teriyaki",price:10.0,ps:"€ 10,00",f:1,cena:1},
   ]},
-  {id:"pollo",label:"Pollo",icon:"🍗",items:[
+  {id:"pollo",label:"鸡肉",icon:"🍗",items:[
     {n:"54",name:"Pollo con Mandorle",desc:"",price:5.5,ps:"€ 5,50",f:0,cena:0},
     {n:"55",name:"Pollo in Salsa Agrodolce",desc:"",price:5.5,ps:"€ 5,50",f:0,cena:0},
     {n:"56",name:"Pollo in Salsa Limone",desc:"",price:5.5,ps:"€ 5,50",f:0,cena:0},
     {n:"58",name:"Pollo Fritto",desc:"",price:5.5,ps:"€ 5,50",f:0,cena:0},
     {n:"59",name:"Pollo alla Gongbao",desc:"Pollo piccante con arachidi",price:5.5,ps:"€ 5,50",f:0,cena:0},
   ]},
-  {id:"gamberi",label:"Gamberi",icon:"🦐",items:[
+  {id:"gamberi",label:"虾类",icon:"🦐",items:[
     {n:"60",name:"Gamberi* con Sale e Pepe",desc:"",price:6.0,ps:"€ 6,00",f:1,cena:0},
     {n:"61",name:"Gamberi* con Ananas in Salsa Agrodolce",desc:"",price:6.0,ps:"€ 6,00",f:1,cena:0},
     {n:"62",name:"Gamberi* in Salsa di Limone",desc:"",price:6.0,ps:"€ 6,00",f:1,cena:0},
@@ -411,27 +411,27 @@ async function seedIfEmpty(force){
     {n:"64",name:"Gamberetti* Fritti",desc:"",price:6.0,ps:"€ 6,00",f:1,cena:0},
     {n:"65",name:"Gamber in Salsa Piccanti",desc:"",price:6.0,ps:"€ 6,00",f:0,cena:0},
   ]},
-  {id:"manzo",label:"Manzo",icon:"🥩",items:[
+  {id:"manzo",label:"牛肉",icon:"🥩",items:[
     {n:"66",name:"Manzo con Patate",desc:"",price:6.0,ps:"€ 6,00",f:0,cena:0},
     {n:"68",name:"Manzo in Salsa Piccante",desc:"",price:6.0,ps:"€ 6,00",f:0,cena:0},
     {n:"69",name:"Manzo con Peperoni",desc:"",price:6.0,ps:"€ 6,00",f:0,cena:0},
   ]},
-  {id:"anatra",label:"Anatra",icon:"🦆",items:[
+  {id:"anatra",label:"鸭肉",icon:"🦆",items:[
     {n:"70",name:"Anatra Arrosto",desc:"",price:6.0,ps:"€ 6,00",f:0,cena:0},
     {n:"71",name:"Anatra Arancia",desc:"",price:6.0,ps:"€ 6,00",f:0,cena:0},
   ]},
-  {id:"maiale",label:"Maiale",icon:"🐷",items:[
+  {id:"maiale",label:"猪肉",icon:"🐷",items:[
     {n:"73",name:"Maiale Agrodolce",desc:"",price:5.5,ps:"€ 5,50",f:0,cena:0},
   ]},
-  {id:"verdure",label:"Verdure",icon:"🥦",items:[
+  {id:"verdure",label:"蔬菜",icon:"🥦",items:[
     {n:"72",name:"Verdure Miste Saltate",desc:"",price:4.5,ps:"€ 4,50",f:0,cena:0},
   ]},
-  {id:"casseruola",label:"Casseruola",icon:"🫕",items:[
+  {id:"casseruola",label:"砂锅",icon:"🫕",items:[
     {n:"75",name:"Calamari",desc:"Calamari* cipolla peperoni salsa piccante",price:6.5,ps:"€ 6,50",f:1,cena:0},
     {n:"76",name:"Gamberetti",desc:"Gamberi* cipolla peperoni salsa piccante",price:6.5,ps:"€ 6,50",f:1,cena:0},
     {n:"77",name:"Manzo",desc:"Manzo* cipolla peperoni salsa piccante",price:6.5,ps:"€ 6,50",f:1,cena:0},
   ]},
-  {id:"nigiri",label:"Nigiri",icon:"🍣",items:[
+  {id:"nigiri",label:"握寿司",icon:"🍣",items:[
     {n:"82",name:"Nigiri Sake",desc:"Salmone* crudo",price:3.0,ps:"€ 3,00",f:1,cena:0},
     {n:"82B",name:"Nigiri Sake con Riso Nero",desc:"Salmone* crudo",price:3.0,ps:"€ 3,00",f:1,cena:0},
     {n:"83",name:"Nigiri Maguro",desc:"Tonno* crudo",price:3.0,ps:"€ 3,00",f:1,cena:0},
@@ -457,7 +457,7 @@ async function seedIfEmpty(force){
     {n:"93",name:"Maguro Avocado",desc:"Tonno* con avocado philadelphia kataifi",price:3.5,ps:"€ 3,50",f:1,cena:0},
     {n:"93B",name:"Maguro Avocado con Riso Nero",desc:"Tonno* con avocado philadelphia kataifi",price:3.5,ps:"€ 3,50",f:1,cena:0},
   ]},
-  {id:"gunkan",label:"Gunkan",icon:"🌊",items:[
+  {id:"gunkan",label:"军舰卷",icon:"🌊",items:[
     {n:"111",name:"Gunkan Spicy Salmon",desc:"Salmone* piccante con alghe all&#39;esterno",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"112",name:"Giò Spicy Salmon",desc:"Salmone* piccante con salmone* all&#39;esterno",price:5.0,ps:"€ 5,00",f:1,cena:0},
     {n:"113",name:"Gunkan Spicy Tuna",desc:"Tonno* piccante con alghe all&#39;esterno",price:4.0,ps:"€ 4,00",f:1,cena:0},
@@ -472,7 +472,7 @@ async function seedIfEmpty(force){
     {n:"116",name:"Giò Ikura",desc:"Uova di salmone* con salmone* all&#39;esterno",price:5.5,ps:"€ 5,50",f:1,cena:1},
     {n:"121",name:"Giò Flambè",desc:"Pistacchio philadelphia kataifi teriyaki avvolto con salmone* scottato",price:5.0,ps:"€ 5,00",f:1,cena:1},
   ]},
-  {id:"temaki",label:"Temaki",icon:"🌮",items:[
+  {id:"temaki",label:"手卷",icon:"🌮",items:[
     {n:"131",name:"Spicy Salmon Temaki",desc:"Salmone* piccante con insalata e avocado",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"131B",name:"Spicy Salmon Temaki con Riso Nero",desc:"Salmone* piccante con insalata e avocado",price:4.5,ps:"€ 4,50",f:1,cena:0},
     {n:"132",name:"Salmon Temaki",desc:"Salmone* con insalata avocado e sesamo",price:4.0,ps:"€ 4,00",f:1,cena:0},
@@ -490,7 +490,7 @@ async function seedIfEmpty(force){
     {n:"138",name:"Ebiten Temaki",desc:"Gamberone* fritto insalata salsa teriyaki sesamo",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"138B",name:"Black Ebiten Temaki",desc:"Gamberone* fritto insalata salsa teriyaki sesamo",price:4.5,ps:"€ 4,50",f:1,cena:0},
   ]},
-  {id:"hosomaki",label:"Hosomaki",icon:"🌀",items:[
+  {id:"hosomaki",label:"细卷",icon:"🌀",items:[
     {n:"148",name:"Hoso Sake 8pz",desc:"Salmone*",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"148B",name:"Hoso Sake con Riso Nero 8pz",desc:"Salmone*",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"149",name:"Hoso Maguro 8pz",desc:"Tonno*",price:4.0,ps:"€ 4,00",f:1,cena:0},
@@ -506,7 +506,7 @@ async function seedIfEmpty(force){
     {n:"155",name:"Maki con Mango 8pz",desc:"Maki fritti e philadelphia mango",price:6.5,ps:"€ 6,50",f:0,cena:0},
     {n:"156",name:"Sakura 8pz",desc:"Salmone* maki con sfoglia di soia",price:4.0,ps:"€ 4,00",f:1,cena:0},
   ]},
-  {id:"uramaki",label:"Uramaki",icon:"🎯",items:[
+  {id:"uramaki",label:"反卷",icon:"🎯",items:[
     {n:"157",name:"Sake Maki 8pz",desc:"Salmone* avocado sesamo philadelphia",price:8.0,ps:"€ 8,00",f:1,cena:0},
     {n:"158",name:"Spicy Sake 8pz",desc:"Salmone* piccante avocado tobiko",price:8.0,ps:"€ 8,00",f:1,cena:0},
     {n:"159",name:"Miura Maki 8pz",desc:"Salmone* grigliato avocado philadelphia con sesamo in salsa teriyaki",price:8.0,ps:"€ 8,00",f:1,cena:0},
@@ -541,11 +541,11 @@ async function seedIfEmpty(force){
     {n:"186",name:"Tataki Roll",desc:"Tempura di gamberi* maionese con sopra salmone scottato in salsa teriyaki e mandorle",price:12.0,ps:"€ 12,00",f:1,cena:1},
     {n:"190",name:"Black Ebiten",desc:"Riso venere con gamberi* in tempura sopra spicy salmon* mandorle e salsa piccante",price:12.0,ps:"€ 12,00",f:1,cena:1},
   ]},
-  {id:"futomaki",label:"Futo Maki",icon:"🎌",items:[
+  {id:"futomaki",label:"粗卷",icon:"🎌",items:[
     {n:"191",name:"Futo Mix 8pz",desc:"Salmone* avocado insalata gambero* philadelphia tobiko*",price:10.0,ps:"€ 10,00",f:1,cena:0},
     {n:"192",name:"Sake Tempur 8pz",desc:"Salmone* avocado cetriolo philadelphia salsa teriyaki kataifi",price:9.0,ps:"€ 9,00",f:1,cena:0},
   ]},
-  {id:"sushi-misto",label:"Sushi Misto",icon:"🍱",items:[
+  {id:"sushi-misto",label:"综合寿司",icon:"🍱",items:[
     {n:"142",name:"Sushi Sake",desc:"8pz nigiri salmone*",price:9.0,ps:"€ 9,00",f:1,cena:0},
     {n:"143",name:"Sushi Mix",desc:"8pz nigiri misto",price:9.0,ps:"€ 9,00",f:0,cena:0},
     {n:"143A",name:"Mix Flambè",desc:"8pz nigiri misto scottato",price:10.0,ps:"€ 10,00",f:0,cena:0},
@@ -554,49 +554,49 @@ async function seedIfEmpty(force){
     {n:"146",name:"Barca S",desc:"20pz sushi misti",price:16.0,ps:"€ 16,00",f:0,cena:0},
     {n:"147",name:"Barca M",desc:"35pz sushi misti",price:25.0,ps:"€ 25,00",f:0,cena:0},
   ]},
-  {id:"sashimi",label:"Sashimi",icon:"🐟",items:[
+  {id:"sashimi",label:"刺身",icon:"🐟",items:[
     {n:"139",name:"Sashimi Salmone",desc:"3pz salmone*",price:6.0,ps:"€ 6,00",f:1,cena:0},
     {n:"140",name:"Sashimi Salmone Tonno",desc:"3pz salmone* e 3pz tonno*",price:8.0,ps:"€ 8,00",f:1,cena:0},
     {n:"141",name:"Sashimi Speciale",desc:"Salmone* branzino* tonno* scampi* gamberoni rossi*",price:15.0,ps:"€ 15,00",f:1,cena:1},
   ]},
-  {id:"tartare",label:"Tartare",icon:"🫙",items:[
+  {id:"tartare",label:"鞑靼",icon:"🫙",items:[
     {n:"96",name:"Sake Tartare",desc:"Salmone* in salsa ponzu e sesamo",price:8.0,ps:"€ 8,00",f:1,cena:0},
     {n:"97",name:"Maguro Tartare",desc:"Tonno* in salsa ponzu e sesamo",price:8.0,ps:"€ 8,00",f:1,cena:0},
     {n:"98",name:"Tartare di Frutta",desc:"Salmone* frutta in salsa di frutta e pistacchio",price:10.0,ps:"€ 10,00",f:1,cena:1},
     {n:"99",name:"Black Rice Sake",desc:"Salmone* in salsa ponzu con riso nero avocado e kataifi",price:8.0,ps:"€ 8,00",f:1,cena:1},
     {n:"100",name:"Black Rice Tonno",desc:"Tonno* in salsa ponzu con riso nero avocado e pistacchio",price:8.0,ps:"€ 8,00",f:1,cena:1},
   ]},
-  {id:"tataki",label:"Tataki",icon:"🌡️",items:[
+  {id:"tataki",label:"炙烤",icon:"🌡️",items:[
     {n:"106",name:"Sake Tataki",desc:"Salmone* scottato con pistacchio sesame in salsa teriyaki",price:9.0,ps:"€ 9,00",f:1,cena:1},
     {n:"107",name:"Maguro Tataki",desc:"Tonno* scottato con pistacchio sesame in salsa teriyaki e salsa di mango",price:10.0,ps:"€ 10,00",f:1,cena:1},
   ]},
-  {id:"carpaccio",label:"Carpaccio",icon:"🍽️",items:[
+  {id:"carpaccio",label:"薄片生鱼",icon:"🍽️",items:[
     {n:"101",name:"Carpaccio Sake",desc:"Con sesamo in salsa ponzu e salsa di passion fruit",price:8.0,ps:"€ 8,00",f:0,cena:0},
     {n:"102",name:"Carpaccio Maguro",desc:"Con sesamo in salsa ponzu e salsa di passion fruit",price:8.0,ps:"€ 8,00",f:0,cena:0},
     {n:"103",name:"Carpaccio Suzuki",desc:"Con sesamo in salsa ponzu e salsa di passion fruit",price:8.0,ps:"€ 8,00",f:0,cena:1},
     {n:"104",name:"Fish Mixed",desc:"Con sesamo in salsa ponzu e salsa di passion fruit",price:8.0,ps:"€ 8,00",f:0,cena:1},
     {n:"105",name:"Mixed Flambè",desc:"Con sesamo in salsa ponzu e salsa di passion fruit",price:8.0,ps:"€ 8,00",f:0,cena:1},
   ]},
-  {id:"chirashi",label:"Chirashi",icon:"🎋",items:[
+  {id:"chirashi",label:"散寿司",icon:"🎋",items:[
     {n:"123",name:"Chirashi Sake",desc:"Riso salmone* sesamo alghe nori tritato",price:8.0,ps:"€ 8,00",f:1,cena:0},
     {n:"124",name:"Chirashi Misto",desc:"Riso salmone* tonno* branzino* sesamo alghe nori tritato",price:9.0,ps:"€ 9,00",f:1,cena:0},
     {n:"125",name:"Chirashi Speciale",desc:"Riso salmone* scottato pistacchio salsa mango sesamo salsa teriyaki alghe nori tritato",price:10.0,ps:"€ 10,00",f:1,cena:1},
   ]},
-  {id:"sandwich",label:"Sandwich",icon:"🥪",items:[
+  {id:"sandwich",label:"三明治",icon:"🥪",items:[
     {n:"126",name:"Hot 3 Pezzi",desc:"Riso con salmone* piccante kataifi maionese piccante teriyaki",price:9.0,ps:"€ 9,00",f:1,cena:0},
     {n:"127",name:"Black Rice 3 Pezzi",desc:"Riso nero salmone* avocado maionese salsa di rucola",price:9.5,ps:"€ 9,50",f:1,cena:1},
   ]},
-  {id:"onigiri",label:"Onigiri",icon:"🍙",items:[
+  {id:"onigiri",label:"饭团",icon:"🍙",items:[
     {n:"128",name:"Salmon Onigiri",desc:"Salmone* crudo",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"129",name:"Tuna Onigiri",desc:"Tonno* cotto",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"130",name:"Black Miura Onigiri",desc:"Riso nero con salmone* cotto",price:4.0,ps:"€ 4,00",f:1,cena:1},
   ]},
-  {id:"speciale",label:"Speciale",icon:"⭐",items:[
+  {id:"speciale",label:"特别推荐",icon:"⭐",items:[
     {n:"109",name:"Sake Rucola",desc:"Involtini di salmone* con rucola in salsa ponzu e salsa di rucola",price:4.0,ps:"€ 4,00",f:1,cena:0},
     {n:"108",name:"Sake Roll",desc:"Tempura di gamberi* e philadelphia avvolto da salmone* con salsa teriyaki e pistachio",price:5.0,ps:"€ 5,00",f:1,cena:1},
     {n:"110",name:"Sake Mango",desc:"Involtini di salmone* con rucola in salsa ponzu e salsa di mango",price:5.0,ps:"€ 5,00",f:1,cena:1},
   ]},
-  {id:"speciali",label:"Speciali",icon:"✨",items:[
+  {id:"speciali",label:"特色菜",icon:"✨",items:[
     {n:"193",name:"Sandwich Salmon",desc:"Crostino di pane con salmone* e maionese piccante",price:5.0,ps:"€ 5,00",f:1,cena:0},
     {n:"195",name:"Chips Salmon",desc:"Patatine fritte con salmone* avocado mango",price:5.0,ps:"€ 5,00",f:1,cena:0},
     {n:"196",name:"Ebifurai",desc:"Salmone* crudo avvolto con gambero* fritto salsa crema di cocco limone olio di oliva",price:5.0,ps:"€ 5,00",f:1,cena:0},
@@ -626,8 +626,8 @@ async function seedIfEmpty(force){
     }
   }
   for(const b of batches) await b.commit();
-  setSyncBadge("● live");
-  showToast("✅ "+count+" piatti caricati!");
+  setSyncBadge("● 实时");
+  showToast("✅ "+count+" 道菜品已加载！");
 }
 </script>
 </body>
